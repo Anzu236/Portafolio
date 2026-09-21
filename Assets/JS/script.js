@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         window.addEventListener('scroll', stickyNavbar);
 
-        // Ejecutar una vez al cargar
         stickyNavbar();
     }
 
@@ -71,29 +70,39 @@ document.addEventListener('DOMContentLoaded', function () {
     // CERRAR MENÚ MÓVIL AL HACER CLIC
     // =========================================
 
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+    const navLinks =
+        document.querySelectorAll(
+            '.navbar-nav .nav-link'
+        );
 
     const navbarCollapse =
-        document.querySelector('.navbar-collapse');
+        document.querySelector(
+            '.navbar-collapse'
+        );
+
 
     navLinks.forEach(function (link) {
 
-        link.addEventListener('click', function () {
+        link.addEventListener(
+            'click',
+            function () {
 
-            if (
-                navbarCollapse &&
-                navbarCollapse.classList.contains('show')
-            ) {
+                if (
+                    navbarCollapse &&
+                    navbarCollapse.classList.contains('show') &&
+                    typeof bootstrap !== 'undefined'
+                ) {
 
-                const collapseInstance =
-                    bootstrap.Collapse.getOrCreateInstance(
-                        navbarCollapse
-                    );
+                    const collapseInstance =
+                        bootstrap.Collapse.getOrCreateInstance(
+                            navbarCollapse
+                        );
 
-                collapseInstance.hide();
+                    collapseInstance.hide();
+                }
+
             }
-
-        });
+        );
 
     });
 
@@ -104,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const sections =
         document.querySelectorAll(
-            'section[id], div.section-container[id]'
+            'section[id]'
         );
 
 
@@ -167,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // =========================================
-    // EVITAR ENVÍO DEL FORMULARIO DE CONTACTO
+    // FORMULARIO DE CONTACTO
     // =========================================
 
     const contactForm =
@@ -181,6 +190,96 @@ document.addEventListener('DOMContentLoaded', function () {
             function (event) {
 
                 event.preventDefault();
+
+
+                const nombre =
+                    document
+                        .getElementById('name')
+                        .value
+                        .trim();
+
+
+                const correo =
+                    document
+                        .getElementById('email')
+                        .value
+                        .trim();
+
+
+                const asunto =
+                    document
+                        .getElementById('subject')
+                        .value
+                        .trim();
+
+
+                const mensaje =
+                    document
+                        .getElementById('floatingTextarea')
+                        .value
+                        .trim();
+
+
+                // =====================================
+                // VALIDACIÓN
+                // =====================================
+
+                if (
+                    nombre === '' ||
+                    correo === '' ||
+                    asunto === '' ||
+                    mensaje === ''
+                ) {
+
+                    alert(
+                        'Por favor completa todos los campos.'
+                    );
+
+                    return;
+                }
+
+
+                // =====================================
+                // VALIDACIÓN BÁSICA DE CORREO
+                // =====================================
+
+                const emailRegex =
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+                if (!emailRegex.test(correo)) {
+
+                    alert(
+                        'Por favor ingresa un correo válido.'
+                    );
+
+                    return;
+                }
+
+
+                // =====================================
+                // CREAR MENSAJE
+                // =====================================
+
+                const cuerpoCorreo =
+                    `Hola Angélica,%0D%0A%0D%0A` +
+                    `${mensaje}%0D%0A%0D%0A` +
+                    `Nombre: ${nombre}%0D%0A` +
+                    `Correo: ${correo}`;
+
+
+                const mailtoLink =
+                    `mailto:ange.aps@gmail.com` +
+                    `?subject=${encodeURIComponent(asunto)}` +
+                    `&body=${cuerpoCorreo}`;
+
+
+                // =====================================
+                // ABRIR CLIENTE DE CORREO
+                // =====================================
+
+                window.location.href =
+                    mailtoLink;
 
             }
         );
